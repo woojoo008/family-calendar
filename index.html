@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#f8e6e3">
+<meta name="theme-color" content="#dfe7dc">
 <title>Lee Family Calendar</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 
 <!-- Firebase (compat build) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -17,181 +18,268 @@
 <style>
 *{box-sizing:border-box}
 :root{
-  --ink:#6b4630;--ink2:#9b7862;--frame:#edc8b8;--paper:#fffdfb;--bg:#f8e6e3;
-  --line:#f1dcd4;--coral:#f0776a;--coral-d:#c95a4f;
+  --ink:#2e3832;--ink2:#647068;--line:#dbe2d9;--wash:#f2f5f0;--card:#ffffff;
+  --mustard:#f2b63f;--mustard-d:#d99a1e;--sage:#dfe7dc;--berry:#c24d6b;
   color-scheme:light;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--sage)}
 html,body{margin:0;min-height:100%}
 body{
-  font-family:'Nunito',ui-rounded,system-ui,-apple-system,sans-serif;color:var(--ink);
-  background-color:var(--bg);
-  background-image:
-    linear-gradient(90deg,rgba(228,170,170,.26) 50%,transparent 50%),
-    linear-gradient(rgba(228,170,170,.26) 50%,transparent 50%);
-  background-size:64px 64px;
+  min-height:100vh;min-height:100dvh;
+  font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,-apple-system,sans-serif;font-weight:500;color:var(--ink);line-height:1.45;
+  background-color:var(--sage);
+  background-image:radial-gradient(rgba(46,56,50,.13) 1.2px,transparent 1.3px);
+  background-size:22px 22px;
 }
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
-.app{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--mustard-d);outline-offset:3px}
+.app{max-width:820px;margin:0 auto;padding:16px 14px 48px}
+h1,h2,h3{font-weight:800;line-height:1.1;margin:0;letter-spacing:-.01em}
 
-/* header plate */
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
-.plate{background:var(--paper);border:9px solid var(--frame);border-radius:30px 38px 28px 36px;
-  box-shadow:0 0 0 4px #fff,0 10px 22px rgba(150,95,80,.16);padding:8px 22px 10px;position:relative}
-.plate::after{content:"★";position:absolute;right:-14px;bottom:-16px;font-size:34px;color:var(--coral);
-  text-shadow:0 0 0 #fff,2px 2px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff}
-h1{font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:clamp(28px,6vw,44px);line-height:1;margin:0;letter-spacing:.5px}
-.plate p{margin:4px 0 0;font-size:13px;color:var(--ink2);font-weight:700}
-.me{display:flex;align-items:center;gap:8px;background:#fff;border:0;border-radius:999px;padding:5px 14px 5px 5px;
-  box-shadow:0 0 0 3px var(--frame);cursor:pointer;font-weight:800}
-.me small{display:block;font-weight:700;color:var(--ink2);font-size:11px}
+/* cute subtitle font */
+.cute,.plate p,.date,.tile span,.sub,.hint,.count,.wishhero p,.note2,.tag,.bubble small,.cm small,.none,.empty,.mealhint{
+  font-family:'Gaegu','Bricolage Grotesque',cursive;font-weight:700;letter-spacing:.01em}
 
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-nav button{border:0;background:#fff;border-radius:999px;padding:9px 16px;font-weight:800;cursor:pointer;
-  box-shadow:0 0 0 3px #fff,0 0 0 5px var(--line)}
-nav button[aria-current="page"]{background:var(--frame);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--frame)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px;
+  box-shadow:0 10px 26px -18px rgba(46,56,50,.45)}
 
-.demo{background:#fff6d6;border:2px dashed #e8c66a;border-radius:14px;padding:8px 12px;font-size:13px;font-weight:700;margin-bottom:12px}
+/* avatars */
+.av{width:40px;height:40px;flex:0 0 40px;border-radius:50%;background:var(--soft);box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--c);
+  display:grid;place-items:center;overflow:hidden}
+.av svg{width:100%;height:100%;display:block}
+.av.big{width:84px;height:84px;flex-basis:84px;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--c)}
+.av.mid{width:56px;height:56px;flex-basis:56px;box-shadow:0 0 0 3px #fff,0 0 0 4.5px var(--c)}
+.av.sm{width:28px;height:28px;flex-basis:28px;box-shadow:0 0 0 1.5px #fff,0 0 0 3px var(--c)}
 
-.panel{background:var(--paper);border:10px solid var(--frame);border-radius:28px;padding:16px;
-  box-shadow:0 0 0 4px #fff,0 10px 24px rgba(150,95,80,.14);margin-bottom:16px}
+/* line icons */
+.li{width:24px;height:24px;display:block}
+
+/* home */
+.topline{display:flex;justify-content:flex-end;margin-bottom:10px}
+.hero{margin:6px 0 22px;padding:22px 20px 20px;background:var(--ink);color:#fff;border-radius:28px;position:relative;overflow:hidden}
+.plate h1{font-size:clamp(30px,7.5vw,48px);letter-spacing:-.02em;max-width:12ch}
+.plate p{margin:6px 0 0;color:#d6e2d9;font-size:21px}
+.gang{display:flex;gap:10px;margin-top:18px}
+.gang .av{box-shadow:0 0 0 3px var(--ink),0 0 0 5px var(--c)}
+
+.me{flex-shrink:0;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:4px 14px 4px 4px;cursor:pointer;font-weight:700;text-align:left;line-height:1.1}
+.me small{display:block;font-weight:500;color:var(--ink2);font-size:12px}
+
+.todayc h2{font-size:24px}
+.todayc .date{margin:2px 0 12px;color:var(--ink2);font-size:20px}
+
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:18px}
+@media (min-width:720px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{display:flex;flex-direction:column;gap:2px;padding:16px;background:#fff;border:1px solid var(--line);border-radius:22px;
+  text-decoration:none;min-height:140px;box-shadow:0 10px 26px -18px rgba(46,56,50,.45)}
+.tile:active{transform:scale(.98)}
+.tile .chip{width:44px;height:44px;border-radius:14px;background:var(--tbg);color:var(--tfg);display:grid;place-items:center;margin-bottom:auto}
+.tile b{font-weight:800;font-size:19px;line-height:1.15;margin-top:14px}
+.tile span{font-size:17px;color:var(--ink2);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere;line-height:1.2}
+
+/* page header */
+.pagehead{display:flex;align-items:center;gap:12px;margin:2px 0 18px}
+.pagehead h1{flex:1;min-width:0;font-size:clamp(24px,6vw,32px);overflow-wrap:anywhere}
+.back{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;text-decoration:none;color:var(--ink)}
+@media (max-width:480px){.pagehead .me>span:not(.av){display:none}.pagehead .me{padding:4px}}
+
 .bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.bar h2{margin:0;flex:1;font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:26px;letter-spacing:.3px}
-.icon{width:38px;height:38px;border-radius:50%;border:0;background:#fff;box-shadow:0 0 0 2px var(--line);
-  font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;font-weight:800}
-.hint{color:var(--ink2);font-weight:700;font-size:14px;margin:0 0 12px;max-width:60ch}
+.bar h2{margin:0;flex:1;font-size:22px;min-width:0}
+.icon{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:22px;line-height:1;
+  cursor:pointer;display:grid;place-items:center;font-weight:700;padding:0}
+.hint{color:var(--ink2);font-size:19px;margin:0 0 14px;max-width:60ch;line-height:1.25}
 
-.btn{border:0;border-radius:999px;padding:10px 18px;background:var(--coral);color:#fff;font-weight:800;cursor:pointer;
-  box-shadow:0 3px 0 var(--coral-d);white-space:nowrap}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--coral-d)}
-.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 0 0 2px var(--line)}
-.btn.sm{padding:7px 14px;font-size:14px}
-.btn.danger{background:#fff;color:#c2463b;box-shadow:0 0 0 2px #f3c7c1}
-.link{background:none;border:0;color:var(--coral);font-weight:800;cursor:pointer;text-decoration:underline;padding:0}
-
-.av{width:36px;height:36px;flex:0 0 36px;border-radius:50%;background:var(--soft);border:3px solid #fff;
-  box-shadow:0 0 0 2px var(--c);display:grid;place-items:center;font-size:19px;line-height:1}
-.av.big{width:74px;height:74px;flex-basis:74px;font-size:40px;border-width:4px;box-shadow:0 0 0 3px var(--c)}
-.av.sm{width:28px;height:28px;flex-basis:28px;font-size:15px;border-width:2px}
+.btn{border:0;border-radius:999px;padding:9px 18px;background:var(--mustard);color:var(--ink);font-weight:700;cursor:pointer;
+  white-space:nowrap;text-decoration:none;display:inline-block;box-shadow:inset 0 -2px 0 var(--mustard-d)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:6px 14px;font-size:14px}
+.btn.danger{background:#fff;color:var(--berry);box-shadow:inset 0 0 0 1px #f0cbd4}
+.link{background:none;border:0;color:var(--berry);font-weight:700;cursor:pointer;text-decoration:underline;padding:0;font-family:inherit}
 
 /* calendar */
 .dows,.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-.dows span{text-align:center;font-size:12px;font-weight:800;color:var(--ink2);padding-bottom:4px}
-.day{min-height:88px;background:#fff7f4;border:2px solid var(--line);border-radius:14px;padding:5px;text-align:left;
-  display:flex;flex-direction:column;gap:3px;cursor:pointer;overflow:hidden}
-.day.out{opacity:.42}
+.dows span{text-align:center;font-size:13px;font-weight:700;color:var(--ink2);padding-bottom:2px}
+.day{min-height:90px;background:var(--wash);border:2px solid transparent;border-radius:14px;padding:5px;text-align:left;
+  display:flex;flex-direction:column;gap:3px;cursor:pointer;overflow:hidden;position:relative}
+.day.out{opacity:.4}
 .day.sel{border-color:var(--ink);background:#fff}
-.num{font-weight:800;font-size:14px;align-self:flex-start;padding:0 4px}
-.day.today .num{background:var(--coral);color:#fff;border-radius:999px;padding:0 7px}
+.num{font-weight:700;font-size:14px;align-self:flex-start;padding:0 5px}
+.day.today .num{background:var(--ink);color:#fff;border-radius:999px;padding:0 7px}
 .chips{display:flex;flex-direction:column;gap:2px;min-width:0}
-.chips i{display:block;font-style:normal;font-size:11px;font-weight:800;background:var(--c);color:#fff;border-radius:6px;
+.chips i{display:block;font-style:normal;font-size:11px;font-weight:700;background:var(--c);color:#fff;border-radius:6px;
   padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chips em{font-style:normal;font-size:11px;font-weight:800;color:var(--ink2)}
+.chips em{font-style:normal;font-size:11px;font-weight:700;color:var(--ink2)}
+.mdots{position:absolute;top:5px;right:5px;display:flex;gap:2px;color:var(--mustard-d)}
+.mdots svg{width:13px;height:13px}
 @media (max-width:640px){
-  .app{padding:12px 10px 30px}
-  .panel{padding:12px;border-width:8px}
+  .app{padding:12px 10px 34px}
+  .card{padding:13px;border-radius:20px}
   .grid,.dows{gap:4px}
-  .day{min-height:52px;padding:4px;border-radius:11px}
+  .day{min-height:54px;padding:4px;border-radius:11px}
   .chips{flex-direction:row;flex-wrap:wrap;gap:3px;padding-left:3px}
   .chips i{width:8px;height:8px;padding:0;font-size:0;border-radius:50%}
   .chips em{font-size:9px}
+  .mdots{top:3px;right:3px}.mdots svg{width:10px;height:10px}
 }
 
 /* event rows */
 .evlist{display:flex;flex-direction:column;gap:8px}
-.ev{display:flex;gap:12px;align-items:center;width:100%;padding:10px 12px;border-radius:18px;background:var(--soft);
-  border:2px solid transparent;text-align:left;cursor:pointer}
+.ev{display:flex;gap:12px;align-items:center;width:100%;padding:10px 12px;border-radius:16px;background:var(--soft);
+  border:1.5px solid transparent;text-align:left;cursor:pointer}
 .ev:hover{border-color:var(--c)}
 .evt{flex:1;min-width:0}
-.evt b{display:block;font-size:16px;overflow-wrap:anywhere}
-.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
-.tag{font-size:12px;font-weight:800;background:#fff;border-radius:999px;padding:2px 9px;color:var(--ink2)}
-.cnt{font-size:13px;font-weight:800}
-.empty{text-align:center;color:var(--ink2);font-weight:700;padding:20px 8px}
+.evt b{display:block;font-size:16px;overflow-wrap:anywhere;line-height:1.2}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:15px;background:#fff;border-radius:999px;padding:0 9px;color:var(--ink2)}
+.cnt{font-size:13px;font-weight:700}
+.empty{text-align:center;color:var(--ink2);padding:16px 8px;font-size:19px}
 
 /* sheet */
-.scrim{position:fixed;inset:0;background:rgba(107,70,48,.35);display:flex;align-items:center;justify-content:center;
-  padding:16px;z-index:20}
+.scrim{position:fixed;inset:0;background:rgba(46,56,50,.42);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
 .scrim[hidden]{display:none}
-.sheet{width:100%;max-width:520px;max-height:88vh;max-height:88dvh;overflow:auto;margin:0;animation:pop .18s ease-out}
-@keyframes pop{from{transform:translateY(12px);opacity:0}}
+.sheet{width:100%;max-width:520px;max-height:88vh;max-height:88dvh;overflow:auto;margin:0;animation:pop .2s ease-out}
+@keyframes pop{from{transform:translateY(14px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
-@media (max-width:640px){.scrim{align-items:flex-end;padding:0 0 env(safe-area-inset-bottom,0px)}
-  .sheet{border-radius:26px 26px 0 0;max-height:92dvh}}
+@media (max-width:640px){.scrim{align-items:flex-end;padding:0}
+  .sheet{border-radius:24px 24px 0 0;max-height:92dvh;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
 .sheethead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.sheethead h2{margin:0;font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:26px;overflow-wrap:anywhere}
+.sheethead h2{font-size:24px;overflow-wrap:anywhere}
 .sheethead>div{flex:1;min-width:0}
-.sub{margin:0;color:var(--ink2);font-weight:700;font-size:14px}
-.note{background:#fff7f4;border-radius:14px;padding:10px 12px;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sub{margin:0;color:var(--ink2);font-size:18px}
+.note{background:var(--wash);border-radius:14px;padding:10px 12px;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-h3{font-size:15px;margin:18px 0 8px}
+h3{font-size:17px;margin:18px 0 8px}
+.bigimg{display:block;width:100%;border-radius:16px}
 
 .form{display:flex;flex-direction:column;gap:12px}
-.form label{display:flex;flex-direction:column;gap:5px;font-weight:800;font-size:14px}
-.form small{font-weight:700;color:var(--ink2)}
-input,select,textarea{border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;width:100%;min-width:0}
-input:focus,select:focus,textarea:focus{border-color:var(--frame);outline:none;box-shadow:0 0 0 3px #f7dcd0}
+.form label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px}
+.form small{font-weight:500;color:var(--ink2)}
+input,select,textarea{border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;background:#fff;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:none}
 fieldset{border:0;padding:0;margin:0}
-legend{font-weight:800;font-size:14px;margin-bottom:6px}
+legend{font-weight:700;font-size:15px;margin-bottom:6px}
 .who{display:flex;gap:6px;flex-wrap:wrap}
-.form .whochip{flex-direction:row;align-items:center;gap:4px;background:var(--soft);border-radius:999px;padding:6px 12px;
-  cursor:pointer;border:2px solid transparent;font-size:14px}
+.form .whochip{flex-direction:row;align-items:center;gap:8px;background:var(--soft);border-radius:999px;padding:4px 12px 4px 4px;
+  cursor:pointer;border:2px solid transparent;font-size:15px}
 .whochip input{position:absolute;opacity:0;width:1px;height:1px}
-.whochip:has(input:checked){border-color:var(--c);background:#fff;box-shadow:0 0 0 2px var(--soft)}
-.whochip:has(input:focus-visible){outline:3px solid var(--coral);outline-offset:2px}
+.whochip:has(input:checked){border-color:var(--ink);background:#fff}
+.whochip:has(input:focus-visible){outline:3px solid var(--mustard-d);outline-offset:2px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px}
+.form .seg label{flex:1;flex-direction:row;align-items:center;justify-content:center;gap:6px;border:2px solid var(--line);border-radius:12px;padding:8px;cursor:pointer}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label:has(input:checked){border-color:var(--ink);background:var(--wash)}
 
 .addrow{display:flex;gap:8px;align-items:center;margin-bottom:14px}
 .addrow input{flex:1}
 
 /* comments */
 .cm{display:flex;gap:8px;margin-bottom:8px}
-.cm div{background:var(--soft);border-radius:14px;padding:6px 10px;flex:1;min-width:0}
-.cm small{font-weight:800;color:var(--ink2);font-size:12px}
-.cm p{margin:2px 0 0;overflow-wrap:anywhere}
+.cm div{background:var(--wash);border-radius:14px;padding:6px 10px;flex:1;min-width:0}
+.cm small{color:var(--ink2);font-size:15px}
+.cm p{margin:0;overflow-wrap:anywhere}
 
-/* wishes */
-.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-@media (max-width:820px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:420px){.board{grid-template-columns:1fr}}
-.col{background:var(--soft);border-radius:22px;padding:12px;border:3px solid #fff;box-shadow:0 0 0 2px var(--c)}
-.colhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.colhead b{flex:1;font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:22px}
-.colhead .n{font-weight:800;font-size:13px;background:#fff;border-radius:999px;padding:1px 9px}
-.wish{background:#fff;border-radius:14px;padding:8px 10px;margin-bottom:8px}
-.wish p{margin:0 0 6px;font-weight:700;overflow-wrap:anywhere}
-.wish.done{box-shadow:inset 0 0 0 2px #f6c9a6}
-.wacts{display:flex;gap:6px}
-.mini{border:0;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800;background:var(--c);color:#fff;cursor:pointer}
-.mini.ghost{background:#fff;color:var(--ink2);box-shadow:0 0 0 2px var(--line)}
-.planned{border:0;background:#fff4e6;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800;cursor:pointer;color:var(--ink)}
-.none{color:var(--ink2);font-size:13px;font-weight:700;margin:4px 2px}
+/* wishes: everyone */
+.people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.person{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:16px 12px;
+  background:var(--soft);border-radius:20px;text-decoration:none}
+.person:active{transform:scale(.98)}
+.person b{font-weight:800;font-size:20px;line-height:1;margin-top:4px}
+.person .count{font-size:18px;color:var(--ink2);line-height:1}
+.peek{list-style:none;margin:4px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:4px}
+.peek li{background:#fff;border-radius:10px;padding:3px 10px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.you{position:absolute;top:10px;right:10px;background:var(--ink);color:#fff;border-radius:999px;font-size:12px;font-weight:700;padding:1px 8px}
 
-.dayh{font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:21px;margin:16px 0 8px}
+/* wishes: one person */
+.wishhero{display:flex;align-items:center;gap:16px;background:var(--soft);border-radius:18px;padding:14px;margin-bottom:14px}
+.wishhero h2{font-size:22px}
+.wishhero p{margin:2px 0 0;color:var(--ink2);font-size:18px}
+.wishes{display:flex;flex-direction:column;gap:10px}
+.wish{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:10px 12px}
+.wish p{margin:0 0 8px;font-weight:600;font-size:17px;overflow-wrap:anywhere}
+.wish.done{border-color:var(--c);background:var(--soft)}
+.wacts{display:flex;gap:6px;flex-wrap:wrap}
+.mini{border:1.5px solid var(--line);border-radius:999px;padding:2px 12px;font-size:14px;font-weight:700;background:#fff;cursor:pointer}
+.mini.plan{background:var(--mustard);border-color:var(--mustard)}
+.planned{border:1.5px solid var(--ink);background:#fff;border-radius:999px;padding:2px 12px;font-size:14px;font-weight:700;cursor:pointer}
+.none{color:var(--ink2);font-size:18px;margin:4px 2px}
+.note2{background:var(--wash);border-radius:12px;padding:8px 12px;color:var(--ink2);margin:0 0 14px;font-size:18px}
+.others{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.others a{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:14px}
+
+.dayh{font-size:19px;margin:18px 0 8px}
 .dayh:first-child{margin-top:0}
 
+/* meals */
+.mealday{border-top:1px solid var(--line);padding:12px 0 4px}
+.mealday:first-of-type{border-top:0;padding-top:0}
+.mealday h3{margin:0 0 8px;font-size:16px}
+.mealrow{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.mlabel{flex:0 0 92px;display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding-top:5px}
+.mlabel svg{width:18px;height:18px;color:var(--mustard-d)}
+.mlist{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.req{display:flex;align-items:center;gap:7px;background:var(--wash);border:1.5px solid transparent;border-radius:999px;padding:3px 4px 3px 4px;max-width:100%}
+.req.chosen{background:#fff6dc;border-color:var(--mustard)}
+.req span{overflow-wrap:anywhere;font-size:15px;font-weight:600;min-width:0}
+.req button{border:0;border-radius:999px;background:#fff;font-size:12px;font-weight:700;padding:3px 9px;cursor:pointer;white-space:nowrap}
+.req.chosen .pick{background:var(--mustard)}
+.req .x{background:none;color:var(--ink2);padding:3px 6px}
+.addmeal{border:1.5px dashed #b9c4b7;background:none;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:700;cursor:pointer;color:var(--ink2)}
+.mealhint{color:var(--ink2);font-size:18px;margin:0 0 12px}
+.mealplan{display:flex;align-items:center;gap:10px;background:#fff6dc;border-radius:14px;padding:8px 12px;margin-bottom:8px}
+.mealplan svg{width:20px;height:20px;color:var(--mustard-d);flex:0 0 20px}
+.mealplan b{font-weight:700}
+.mealplan small{display:block;color:var(--ink2);font-family:'Gaegu',cursive;font-weight:700;font-size:15px}
+@media (max-width:420px){.mlabel{flex-basis:84px;font-size:13px}.mealrow{gap:6px;margin-bottom:8px}}
+
 /* chat */
-.chat{height:min(60vh,540px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px 10px;margin-bottom:10px}
+.chat{height:min(58vh,540px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px 10px;margin-bottom:10px}
 .msg{display:flex;gap:8px;align-items:flex-end}
 .msg.mine{flex-direction:row-reverse}
-.bubble{background:var(--soft);border-radius:18px 18px 18px 6px;padding:7px 12px;max-width:75%}
-.msg.mine .bubble{border-radius:18px 18px 6px 18px;box-shadow:inset 0 0 0 2px var(--c)}
-.bubble small{font-weight:800;color:var(--ink2);font-size:11px}
-.bubble p{margin:1px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.bubble{background:var(--wash);border-radius:18px 18px 18px 6px;padding:5px 12px 7px;max-width:78%;min-width:0}
+.msg.mine .bubble{border-radius:18px 18px 6px 18px;background:var(--soft)}
+.bubble small{color:var(--ink2);font-size:15px;display:block;line-height:1.2}
+.bubble p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px}
+.bubble.bare{background:none;padding:0}
+.msg.mine .bubble.bare{text-align:right}
+.sticker{width:112px;height:112px;display:block;object-fit:contain}
+.photo{border:0;padding:0;background:none;cursor:zoom-in;display:block;margin-top:3px}
+.photo img{display:block;max-width:min(240px,100%);max-height:300px;border-radius:14px}
+
+.tray{background:var(--wash);border-radius:16px;padding:8px;margin-bottom:10px;max-height:200px;overflow-y:auto;display:grid;gap:4px}
+.tray[hidden]{display:none}
+.tray.emo{grid-template-columns:repeat(auto-fill,minmax(42px,1fr))}
+.tray.gif{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
+.tray button{border:0;background:none;border-radius:10px;cursor:pointer;padding:4px;display:grid;place-items:center}
+.tray button:hover{background:#fff}
+.tray.emo button{font-size:26px;line-height:1}
+.tray.gif img{width:60px;height:60px}
+.tray p{grid-column:1/-1;margin:0 4px 2px;font-size:16px;color:var(--ink2);font-family:'Gaegu',cursive;font-weight:700}
+.composer{display:flex;gap:6px;align-items:center}
+.composer input[type=text]{flex:1;border-radius:999px}
+.tool{width:42px;height:42px;flex:0 0 42px;border-radius:50%;background:#fff;border:1px solid var(--line);cursor:pointer;
+  display:grid;place-items:center;line-height:1;padding:0;font-weight:800;font-size:12px;color:var(--ink)}
+.tool.on{background:var(--mustard);border-color:var(--mustard)}
+.tool input{position:absolute;width:1px;height:1px;opacity:0}
+.tool:has(input:focus-visible){outline:3px solid var(--mustard-d);outline-offset:2px}
+.send{width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--ink);border:0;cursor:pointer;display:grid;place-items:center;padding:0;color:#fff}
+@media (max-width:420px){.tool{width:38px;height:38px;flex-basis:38px}.composer{gap:4px}}
 
 /* who */
 .whopanel{max-width:560px;width:100%;text-align:center}
-.whopanel h2{font-family:'Chewy','Nunito',cursive;font-weight:400;font-size:32px;margin:0 0 4px}
-.whogrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.whopanel h2{font-size:28px;margin:0 0 4px}
+.whogrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 @media (max-width:460px){.whogrid{grid-template-columns:repeat(2,1fr)}}
-.whogrid button{border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;
-  font-weight:800;font-size:17px;padding:8px;border-radius:18px}
-.whogrid button:hover{background:#fff4f0}
+.whogrid button{border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-weight:700;font-size:17px;padding:10px;border-radius:18px}
+.whogrid button:hover{background:var(--wash)}
 
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
-  background:var(--ink);color:#fff;font-weight:800;padding:10px 18px;border-radius:999px;z-index:40;
+  background:var(--ink);color:#fff;font-weight:700;padding:10px 18px;border-radius:999px;z-index:40;
   opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
 #toast.on{opacity:1}
 </style>
@@ -200,32 +288,17 @@ legend{font-weight:800;font-size:14px;margin-bottom:6px}
 </head>
 <body>
 <div class="app">
-  <header>
-    <div class="plate">
-      <h1>Lee Family Calendar</h1>
-      <p>For Appa, Umma, Irene &amp; Claire</p>
-    </div>
-    <button class="me" id="meBtn" data-act="switchMe" aria-label="Switch person"></button>
-  </header>
   <div id="demo"></div>
-  <nav aria-label="Sections">
-    <button data-tab="cal">📅 Calendar</button>
-    <button data-tab="wishes">💭 Weekly Wishes</button>
-    <button data-tab="plans">🧺 Final Plans</button>
-    <button data-tab="chat">💬 Family Chat Room</button>
-  </nav>
   <main id="main"></main>
 </div>
 
-<div id="scrim" class="scrim" hidden><div class="panel sheet" role="dialog" aria-modal="true" id="sheetBody"></div></div>
+<div id="scrim" class="scrim" hidden><div class="card sheet" role="dialog" aria-modal="true" id="sheetBody"></div></div>
 <div id="who" class="scrim" hidden></div>
 <div id="toast" role="status"></div>
 
 <script>
 /* ============================================================
-   1) PASTE YOUR FIREBASE SETTINGS HERE
-   Firebase console → Project settings → Your apps → Web app → Config
-   Until you do, the app runs in demo mode (saved on this device only).
+   1) FIREBASE SETTINGS
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyBiTnrJrLjcRL7BYrjwBsLmXrE41LxlVn8",
@@ -238,15 +311,47 @@ const firebaseConfig = {
 
 /* ============================================================ */
 const MEMBERS = {
-  appa:   {name:'Appa',   emoji:'🐥', color:'#f27a98', soft:'#fde2ea'},
-  umma:   {name:'Umma',   emoji:'🐱', color:'#e3a21f', soft:'#fdf0cc'},
-  irene:  {name:'Irene',  emoji:'🧸', color:'#b07a52', soft:'#f3e4d7'},
-  claire: {name:'Claire', emoji:'🐰', color:'#a57fd6', soft:'#eee4fb'},
-  family: {name:'Family', emoji:'🏡', color:'#4f9f7c', soft:'#dcf1e6'}
+  appa:   {name:'Appa',   art:'pig',   color:'#e0708c', soft:'#fde4ea'},
+  umma:   {name:'Umma',   art:'cat',   color:'#d9941a', soft:'#fff0c9'},
+  irene:  {name:'Irene',  art:'bear',  color:'#a8744d', soft:'#f3e4d6'},
+  claire: {name:'Claire', art:'dog',   color:'#8e6fd0', soft:'#ece4ff'},
+  family: {name:'Family', art:'house', color:'#4f8f6b', soft:'#dcefe3'}
 };
 const PEOPLE = ['appa','umma','irene','claire'];
 const REPEAT = {none:"Doesn't repeat", weekly:'Every week', monthly:'Every month', yearly:'Every year'};
-const C = {events:'cal_events', comments:'cal_comments', wishes:'cal_wishes', chat:'cal_chat'};
+const C = {events:'cal_events', comments:'cal_comments', wishes:'cal_wishes', chat:'cal_chat', meals:'cal_meals'};
+
+/* ---------- drawings ---------- */
+const D = '#33292a';
+const eyes = (y=50,dx=12,r=3.8) => `<circle cx="${50-dx}" cy="${y}" r="${r}" fill="${D}"/><circle cx="${50+dx}" cy="${y}" r="${r}" fill="${D}"/><circle cx="${50-dx+1.3}" cy="${y-1.4}" r="1.2" fill="#fff"/><circle cx="${50+dx+1.3}" cy="${y-1.4}" r="1.2" fill="#fff"/>`;
+const ART = {
+  pig:   `<path d="M24 38 L20 14 L42 26 Z" fill="#ef9aae" stroke="#ef9aae" stroke-width="7" stroke-linejoin="round"/><path d="M76 38 L80 14 L58 26 Z" fill="#ef9aae" stroke="#ef9aae" stroke-width="7" stroke-linejoin="round"/><path d="M27 31 L25 20 L36 26 Z" fill="#f7c2cd"/><path d="M73 31 L75 20 L64 26 Z" fill="#f7c2cd"/><ellipse cx="50" cy="58" rx="33" ry="30" fill="#f8c4ce"/><ellipse cx="29" cy="64" rx="6" ry="3.6" fill="#f08aa3" opacity=".45"/><ellipse cx="71" cy="64" rx="6" ry="3.6" fill="#f08aa3" opacity=".45"/>${eyes(50,13)}<ellipse cx="50" cy="66" rx="13" ry="9.5" fill="#ef9aae"/><ellipse cx="45.5" cy="66" rx="2.4" ry="3.4" fill="#b8566f"/><ellipse cx="54.5" cy="66" rx="2.4" ry="3.4" fill="#b8566f"/>`,
+  cat:   `<path d="M20 46 L23 14 L45 28 Z" fill="#f2b55c" stroke="#f2b55c" stroke-width="5" stroke-linejoin="round"/><path d="M80 46 L77 14 L55 28 Z" fill="#f2b55c" stroke="#f2b55c" stroke-width="5" stroke-linejoin="round"/><path d="M27 36 L28 23 L37 29 Z" fill="#f7c6c9"/><path d="M73 36 L72 23 L63 29 Z" fill="#f7c6c9"/><ellipse cx="50" cy="58" rx="35" ry="29" fill="#f5c06d"/><path d="M44 33 v7 M50 31 v8 M56 33 v7" stroke="#e09a3e" stroke-width="3" stroke-linecap="round"/>${eyes(54,13)}<path d="M47.5 59 h5 l-2.5 3z" fill="#e57d8d"/><path d="M44 63 q3 3.5 6 0 q3 3.5 6 0" fill="none" stroke="${D}" stroke-width="2.2" stroke-linecap="round"/><path d="M14 57 h12 M15 63 l11 -2 M86 57 h-12 M85 63 l-11 -2" stroke="#c98a3c" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>`,
+  bear:  `<circle cx="25" cy="29" r="13" fill="#bd875f"/><circle cx="75" cy="29" r="13" fill="#bd875f"/><circle cx="25" cy="29" r="6" fill="#e8bd96"/><circle cx="75" cy="29" r="6" fill="#e8bd96"/><circle cx="50" cy="57" r="33" fill="#c99068"/><ellipse cx="50" cy="67" rx="14" ry="10.5" fill="#f2d6ba"/>${eyes(51,13)}<ellipse cx="50" cy="63" rx="4.5" ry="3.2" fill="${D}"/><path d="M46 68 q4 3.5 8 0" fill="none" stroke="${D}" stroke-width="2.2" stroke-linecap="round"/>`,
+  dog:   `<ellipse cx="50" cy="54" rx="29" ry="31" fill="#e9b366"/><path d="M40 26 q10 -6 20 0 q-4 6 -10 6 q-6 0 -10 -6z" fill="#f3c987"/><ellipse cx="50" cy="69" rx="16" ry="12" fill="#f8dfb3"/><ellipse cx="23" cy="56" rx="11" ry="21" fill="#c88a3d" transform="rotate(16 23 56)"/><ellipse cx="77" cy="56" rx="11" ry="21" fill="#c88a3d" transform="rotate(-16 77 56)"/>${eyes(50,11.5)}<ellipse cx="50" cy="63" rx="5.5" ry="4" fill="${D}"/><path d="M50 67 v3 M45 70 q5 4 10 0" fill="none" stroke="${D}" stroke-width="2" stroke-linecap="round"/><path d="M47.5 72 q2.5 7 5 0z" fill="#ef8a9a"/>`,
+  house: `<path d="M20 48 L50 22 L80 48 V80 a5 5 0 0 1 -5 5 H25 a5 5 0 0 1 -5 -5 Z" fill="#9fd0b2"/><path d="M13 50 L50 17 L87 50" fill="none" stroke="#4f8f6b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="42" y="60" width="16" height="25" rx="3" fill="#4f8f6b"/><rect x="27" y="54" width="10" height="10" rx="2" fill="#fff"/><rect x="63" y="54" width="10" height="10" rx="2" fill="#fff"/>`
+};
+const svg = inner => `<svg viewBox="0 0 100 100" aria-hidden="true">${inner}</svg>`;
+const li = (p, w=2) => `<svg class="li" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const ICON = {
+  cal:   li(`<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>`),
+  wish:  li(`<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>`),
+  plans: li(`<rect x="4" y="4" width="16" height="17" rx="3"/><path d="M8 10l2 2 4-4M8 16h8"/>`),
+  chat:  li(`<path d="M5 5h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 3.5V18H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>`),
+  sun:   li(`<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2.5 12h2M19.5 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`),
+  moon:  li(`<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>`),
+  smile: li(`<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/>`),
+  cam:   li(`<rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8.5 7l1.5-3h4l1.5 3"/><circle cx="12" cy="13.5" r="3.5"/>`)
+};
+const MEALS = {breakfast:{name:'Breakfast', icon:ICON.sun}, dinner:{name:'Dinner', icon:ICON.moon}};
+const BACK = li(`<path d="M15 4L7 12l8 8"/>`, 2.5);
+const SEND = li(`<path d="M4 12L20 4l-5 16-3.5-6.5z"/>`, 2);
+
+const EMOJI = '😀 😂 🤣 😊 🥰 😍 😘 😋 😜 🤪 😎 🥳 🤩 🤔 😮 😴 😭 😡 🥺 🙈 👍 👏 🙏 💪 👋 🤗 ❤️ 🧡 💛 💚 💙 💜 💖 ✨ ⭐ 🌈 🔥 🎉 🎂 🎁 🍕 🍔 🍦 🍩 🍓 ☕ 🏖️ ⚽ 🎾 🎹 📚 🚗 ✈️ 🐶 🐱 🐰 🐻 🐥 🦄 🌸 ☀️ 🌙'.split(' ');
+const STICKERS = ['1f600','1f602','1f923','1f60a','1f970','1f60d','1f618','1f60b','1f61c','1f92a','1f60e','1f973','1f929','1f914','1f62e','1f634','1f62d','1f621','1f631','1f97a','1f917','1f44d','1f44f','1f64f','1f4aa','1f44b','2764_fe0f','1f496','1f525','2728','1f389','1f4af'];
+const stickerUrl = c => `https://fonts.gstatic.com/s/e/notoemoji/latest/${c}/512.gif`;
+const okGif = u => typeof u==='string' && (/^https:\/\/fonts\.gstatic\.com\/s\/e\/notoemoji\//.test(u));
+const okImg = u => typeof u==='string' && /^data:image\/(jpeg|png|gif|webp);base64,/.test(u);
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -262,12 +367,13 @@ const lsGet = (k,f) => { try { const v = localStorage.getItem(k); return v==null
 const lsSet = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
 const M = key => MEMBERS[key] || MEMBERS.family;
 const mv = m => `--c:${m.color};--soft:${m.soft}`;
-const av = (m,cls='') => `<span class="av ${cls}" style="${mv(m)}" aria-hidden="true">${m.emoji}</span>`;
+const av = (m,cls='') => `<span class="av ${cls}" style="${mv(m)}" aria-hidden="true">${svg(ART[m.art])}</span>`;
+const plural = (n,w) => `${n} ${w}${n===1?'':'s'}`;
 const when = t => { const d = new Date(t); return ymd(d)===ymd(new Date())
   ? d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})
   : d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ', ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); };
 let toastT;
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2200); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2400); }
 
 /* ---------- storage: Firebase or local demo ---------- */
 function makeFireStore(){
@@ -289,7 +395,7 @@ function makeLocalStore(){
   const L = {};
   const read = c => { try { return JSON.parse(localStorage.getItem('famcal:'+c) || '[]'); } catch(e){ return []; } };
   const emit = c => (L[c]||[]).forEach(o => o.f(o.opts.latest ? read(c).sort((a,b)=>b.createdAt-a.createdAt).slice(0,o.opts.latest) : read(c)));
-  const write = (c,a) => { try { localStorage.setItem('famcal:'+c, JSON.stringify(a)); } catch(e){} emit(c); };
+  const write = (c,a) => { try { localStorage.setItem('famcal:'+c, JSON.stringify(a)); } catch(e){ toast('This device is out of space'); } emit(c); };
   addEventListener('storage', e => { if(e.key && e.key.startsWith('famcal:cal_')) emit(e.key.slice(7)); });
   return {
     listen(c,f,opts={}){ (L[c] = L[c] || []).push({f,opts}); emit(c); },
@@ -301,15 +407,15 @@ function makeLocalStore(){
 const configured = !!(window.firebase && firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE') && firebaseConfig.projectId);
 let store;
 try { store = configured ? makeFireStore() : makeLocalStore(); } catch(e){ store = makeLocalStore(); }
-if(!configured) $('#demo').innerHTML = `<div class="demo">Demo mode: events are saved on this device only. Paste your Firebase settings into the file to share with the family.</div>`;
+if(!configured) $('#demo').innerHTML = `<div class="note2">Demo mode: things are saved on this device only.</div>`;
 
 /* ---------- state ---------- */
 const now = new Date();
 const today = ymd(now);
 const S = {
-  me: lsGet('famcal:me',''), view:'cal',
+  me: lsGet('famcal:me',''), view:'home', who:'',
   month: new Date(now.getFullYear(), now.getMonth(), 1), sel: today, week: weekStart(now),
-  events:[], comments:[], wishes:[], chat:[], openId:null
+  events:[], comments:[], wishes:[], chat:[], meals:[], openId:null, tray:'', chatSig:'', stick:true
 };
 if(!MEMBERS[S.me] || S.me==='family') S.me = '';
 
@@ -328,16 +434,44 @@ function occursOn(e, ds){
 }
 const eventsOn = ds => S.events.filter(e => occursOn(e,ds)).sort((a,b) => (a.time||'').localeCompare(b.time||''));
 
-/* ---------- views ---------- */
+/* ---------- pages ---------- */
 const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const weekBar = `<div class="bar"><button class="icon" data-act="wprev" aria-label="Previous week">‹</button><h2 id="weekTitle"></h2><button class="icon" data-act="wnext" aria-label="Next week">›</button></div>`;
+const meBtn = `<button class="me" id="meBtn" data-act="switchMe" aria-label="Switch person"></button>`;
+const PAGES = ['home','cal','wishes','plans','chat'];
 
-function show(v){
-  S.view = v;
-  document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-current', b.dataset.tab===v ? 'page' : 'false'));
+function route(){
+  const parts = location.hash.replace(/^#\/?/,'').split('/');
+  const page = PAGES.includes(parts[0]) ? parts[0] : 'home';
+  const who = page==='wishes' && PEOPLE.includes(parts[1]) ? parts[1] : '';
+  return {page, who};
+}
+
+function head(title, icon, back='#/', backName='home'){
+  return `<header class="pagehead"><a class="back" href="${back}" aria-label="Back to ${backName}">${BACK}</a>
+    <h1>${title}</h1>${meBtn}</header>`;
+}
+
+function show(){
+  const r = route();
+  S.view = r.page; S.who = r.who; S.tray = ''; S.chatSig = '';
+  if(!$('#scrim').hidden) closeSheet();
   const main = $('#main');
-  if(v==='cal') main.innerHTML = `
-    <section class="panel">
+  if(S.view==='home') main.innerHTML = `
+    <div class="topline">${meBtn}</div>
+    <section class="hero">
+      <div class="plate"><h1>Lee Family Calendar</h1><p>For Appa, Umma, Irene &amp; Claire</p></div>
+      <div class="gang">${PEOPLE.map(k=>av(MEMBERS[k],'mid')).join('')}</div>
+    </section>
+    <section class="card todayc"><h2 id="hiTitle"></h2><p class="date">${now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p><div id="homeMeals"></div><div id="homeToday"></div></section>
+    <nav class="tiles" aria-label="Sections">
+      <a class="tile" href="#/cal" style="--tbg:#ffe3d6;--tfg:#b4532f"><span class="chip">${ICON.cal}</span><b>Calendar</b><span id="tCal"></span></a>
+      <a class="tile" href="#/wishes" style="--tbg:#ece4ff;--tfg:#6b4fb8"><span class="chip">${ICON.wish}</span><b>Weekly Wishes</b><span id="tWish"></span></a>
+      <a class="tile" href="#/plans" style="--tbg:#dcefe3;--tfg:#3c7a57"><span class="chip">${ICON.plans}</span><b>Final Plans</b><span id="tPlan"></span></a>
+      <a class="tile" href="#/chat" style="--tbg:#fff1c7;--tfg:#9a6a0a"><span class="chip">${ICON.chat}</span><b>Family Chat</b><span id="tChat"></span></a>
+    </nav>`;
+  else if(S.view==='cal') main.innerHTML = head('Calendar', ICON.cal) + `
+    <section class="card">
       <div class="bar">
         <button class="icon" data-act="mprev" aria-label="Previous month">‹</button>
         <h2 id="monthTitle"></h2>
@@ -347,39 +481,98 @@ function show(v){
       <div class="dows">${DOW.map(d=>`<span>${d}</span>`).join('')}</div>
       <div class="grid" id="grid"></div>
     </section>
-    <section class="panel">
+    <section class="card">
       <div class="bar"><h2 id="agendaTitle"></h2><button class="btn" data-act="newEvent">+ Add event</button></div>
       <div id="agenda"></div>
+    </section>
+    <section class="card">
+      <div class="bar"><h2>Breakfast &amp; dinner</h2></div>
+      <p class="mealhint">Ask for what you want to eat. Tap "Pick" on the one we'll make.</p>
+      <div id="calMeals"></div>
     </section>`;
-  else if(v==='wishes') main.innerHTML = `
-    <section class="panel">
+  else if(S.view==='wishes' && !S.who) main.innerHTML = head('Weekly Wishes', ICON.wish) + `
+    <section class="card">
       ${weekBar}
-      <p class="hint">Write down what you want to do, or what we have to do, this week. Please be realistic in your choices!</p>
-      <form id="wishForm" class="addrow"><span id="wishAv"></span><input id="wishIn" placeholder="My wish for this week" maxlength="120" required aria-label="New wish"><button class="btn">Add wish</button></form>
-      <div class="board" id="board"></div>
+      <p class="hint">Write down what you want to do, or what we have to do, this week. Please be realistic in your choices! Tap a person to see their wishes.</p>
+      <div class="people" id="people"></div>
+    </section>
+    <section class="card" id="meals">
+      <div class="bar"><h2>Breakfast &amp; dinner requests</h2></div>
+      <p class="mealhint">What do you want to eat this week? Add a request. Tap "Pick" on the one we'll make, and it goes to Final Plans.</p>
+      <div id="weekMeals"></div>
     </section>`;
-  else if(v==='plans') main.innerHTML = `
-    <section class="panel">
+  else if(S.view==='wishes'){
+    const m = MEMBERS[S.who], mine = S.who===S.me;
+    main.innerHTML = head(`${m.name}'s wishes`, '', '#/wishes', 'everyone’s wishes') + `
+    <section class="card" style="${mv(m)}">
+      <div class="wishhero">${av(m,'big')}<div><h2>${mine?'My wishes':m.name+'’s wishes'}</h2><p id="pwCount"></p></div></div>
       ${weekBar}
-      <p class="hint">The wishes we turned into real plans for this week.</p>
+      ${mine
+        ? `<form id="wishForm" class="addrow"><input id="wishIn" placeholder="My wish for this week" maxlength="120" required aria-label="New wish"><button class="btn">Add wish</button></form>`
+        : `<p class="note2">Only ${m.name} can add wishes here, but anyone can plan them.</p>`}
+      <div class="wishes" id="pwList"></div>
+    </section>
+    <section class="card"><h3 style="margin:0 0 10px;text-align:center">Other wish pages</h3>
+      <div class="others">${PEOPLE.filter(k=>k!==S.who).map(k=>`<a href="#/wishes/${k}">${av(MEMBERS[k],'mid')}${MEMBERS[k].name}</a>`).join('')}</div></section>`;
+  }
+  else if(S.view==='plans') main.innerHTML = head('Final Plans', ICON.plans) + `
+    <section class="card">
+      ${weekBar}
+      <p class="hint">The wishes and meals we turned into real plans this week.</p>
       <div id="plans"></div>
     </section>`;
-  else if(v==='chat') main.innerHTML = `
-    <section class="panel">
-      <div class="bar"><h2>Family Chat Room</h2></div>
+  else if(S.view==='chat'){
+    main.innerHTML = head('Family Chat', ICON.chat) + `
+    <section class="card">
       <div class="chat" id="chat" aria-live="polite"></div>
-      <form id="chatForm" class="addrow"><input id="chatIn" placeholder="Say something to the family" maxlength="500" required autocomplete="off" aria-label="Message"><button class="btn">Send</button></form>
+      <div class="tray emo" id="emojiTray" hidden>${EMOJI.map(e=>`<button type="button" data-act="emoji" data-e="${e}" aria-label="Add ${e}">${e}</button>`).join('')}</div>
+      <div class="tray gif" id="gifTray" hidden><p>Tap one to send it</p>${STICKERS.map(c=>`<button type="button" data-act="sticker" data-c="${c}" aria-label="Send moving sticker"><img src="${stickerUrl(c)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></button>`).join('')}</div>
+      <form id="chatForm" class="composer">
+        <button type="button" class="tool" data-act="tray" data-t="emoji" aria-label="Emoji" aria-expanded="false">${ICON.smile}</button>
+        <button type="button" class="tool" data-act="tray" data-t="gif" aria-label="Moving stickers" aria-expanded="false">GIF</button>
+        <label class="tool" aria-label="Send a photo or GIF">${ICON.cam}<input type="file" id="photoIn" accept="image/*"></label>
+        <input type="text" id="chatIn" placeholder="Say something" maxlength="500" autocomplete="off" aria-label="Message">
+        <button class="send" aria-label="Send">${SEND}</button>
+      </form>
     </section>`;
+    $('#chat').addEventListener('load', () => { if(S.stick){ const el=$('#chat'); el.scrollTop = el.scrollHeight; } }, true);
+    $('#photoIn').addEventListener('change', sendPhoto);
+  }
+  window.scrollTo(0,0);
   refresh(true);
 }
 
 function refresh(scrollChat){
-  if(S.view==='cal'){ drawGrid(); drawAgenda(); }
-  else if(S.view==='wishes'){ drawWeekTitle(); drawBoard(); }
+  if(S.view==='home') drawHome();
+  else if(S.view==='cal'){ drawGrid(); drawAgenda(); $('#calMeals').innerHTML = mealBoard([S.sel]); }
+  else if(S.view==='wishes'){ drawWeekTitle(); if(S.who) drawPerson(); else { drawPeople(); $('#weekMeals').innerHTML = mealBoard(weekDays()); } }
   else if(S.view==='plans'){ drawWeekTitle(); drawPlans(); }
   else if(S.view==='chat'){ drawChat(scrollChat); }
   if(S.openId) drawComments();
   drawMe();
+}
+
+function chatPreview(c){
+  if(!c) return 'Say hi to the family';
+  const n = M(c.by).name;
+  if(c.img) return `${n} sent a photo`;
+  if(c.gif) return `${n} sent a sticker`;
+  return `${n}: ${c.text}`;
+}
+
+function drawHome(){
+  const wk = ymd(weekStart(now)), ws = S.wishes.filter(w => w.week===wk);
+  const evs = eventsOn(today), planned = ws.filter(w => w.status==='planned').length;
+  $('#hiTitle').textContent = S.me ? `Hi, ${M(S.me).name}!` : 'Hi there!';
+  $('#homeToday').innerHTML = evs.length
+    ? `<div class="evlist">${evs.map(e=>evRow(e)).join('')}</div>`
+    : `<p class="none" style="margin:0">Nothing planned today. <a class="link" href="#/cal">Open the calendar</a></p>`;
+  $('#tCal').textContent = evs.length ? `${plural(evs.length,'thing')} today` : 'See the whole month';
+  const mr = S.meals.filter(x => x.date>=wk && x.date<=ymd(addDays(weekStart(now),6))).length;
+  $('#tWish').textContent = (ws.length ? `${ws.length} ${ws.length===1?'wish':'wishes'}` : 'No wishes yet') + (mr ? `, ${mr} meal ${mr===1?'request':'requests'}` : '');
+  $('#homeMeals').innerHTML = chosenMeals(today);
+  $('#tPlan').textContent = planned ? `${plural(planned,'plan')} this week` : 'Nothing planned yet';
+  $('#tChat').textContent = chatPreview(S.chat[S.chat.length-1]);
 }
 
 function drawGrid(){
@@ -391,7 +584,7 @@ function drawGrid(){
     const d = addDays(start,i), ds = ymd(d), evs = eventsOn(ds);
     const cls = ['day', d.getMonth()!==mo && 'out', ds===today && 'today', ds===S.sel && 'sel'].filter(Boolean).join(' ');
     html += `<button class="${cls}" data-act="pick" data-date="${ds}" aria-label="${fmtDay(ds)}, ${evs.length} events">
-      <span class="num">${d.getDate()}</span>
+      <span class="num">${d.getDate()}</span>${mealDots(ds)}
       <span class="chips">${evs.slice(0,3).map(e=>`<i style="--c:${M(e.member).color}">${esc(e.title)}</i>`).join('')}${evs.length>3?`<em>+${evs.length-3}</em>`:''}</span>
     </button>`;
   }
@@ -422,55 +615,119 @@ function drawWeekTitle(){
   $('#weekTitle').textContent = `${a.toLocaleDateString('en-US',o)} – ${b.toLocaleDateString('en-US',o)}`;
 }
 
-function drawBoard(){
-  const wa = $('#wishAv'); if(wa) wa.innerHTML = S.me ? av(M(S.me)) : '';
-  const wk = ymd(S.week);
-  const ws = S.wishes.filter(w => w.week===wk).sort((a,b) => a.createdAt-b.createdAt);
-  $('#board').innerHTML = PEOPLE.map(k => {
-    const m = MEMBERS[k], list = ws.filter(w => w.member===k);
-    return `<div class="col" style="${mv(m)}">
-      <div class="colhead">${av(m)}<b>${m.name}</b><span class="n">${list.length}</span></div>
-      ${list.length ? list.map(w => `<div class="wish ${w.status==='planned'?'done':''}">
-        <p>${esc(w.text)}</p>
-        ${w.status==='planned'
-          ? `<button class="planned" data-act="openEvent" data-id="${esc(w.eventId)}">⭐ ${fmtDay(w.planDate)}${w.planTime?', '+fmtTime(w.planTime):''}</button>`
-          : `<div class="wacts"><button class="mini" data-act="planWish" data-id="${w.id}">📅 Plan it</button>${w.member===S.me?`<button class="mini ghost" data-act="delWish" data-id="${w.id}" aria-label="Remove wish">✕</button>`:''}</div>`}
-      </div>`).join('') : `<p class="none">No wishes yet</p>`}
-    </div>`;
+const weekWishes = () => { const wk = ymd(S.week); return S.wishes.filter(w => w.week===wk).sort((a,b) => a.createdAt-b.createdAt); };
+
+function drawPeople(){
+  const ws = weekWishes();
+  $('#people').innerHTML = PEOPLE.map(k => {
+    const m = MEMBERS[k], list = ws.filter(w => w.member===k), p = list.filter(w => w.status==='planned').length;
+    const count = list.length ? `${list.length} ${list.length===1?'wish':'wishes'}${p?`, ${p} planned`:''}` : 'No wishes yet';
+    return `<a class="person" href="#/wishes/${k}" style="${mv(m)}">
+      ${k===S.me?'<span class="you">You</span>':''}
+      ${av(m,'big')}<b>${m.name}</b><span class="count">${count}</span>
+      ${list.length?`<ul class="peek">${list.slice(0,2).map(w=>`<li>${w.status==='planned'?'⭐ ':''}${esc(w.text)}</li>`).join('')}</ul>`:''}
+    </a>`;
   }).join('');
 }
 
+function drawPerson(){
+  const list = weekWishes().filter(w => w.member===S.who), p = list.filter(w => w.status==='planned').length;
+  $('#pwCount').textContent = list.length ? `${list.length} ${list.length===1?'wish':'wishes'} this week${p?`, ${p} planned`:''}` : 'Nothing yet this week';
+  const mine = S.who===S.me;
+  $('#pwList').innerHTML = list.length ? list.map(w => `<div class="wish ${w.status==='planned'?'done':''}">
+      <p>${esc(w.text)}</p>
+      ${w.status==='planned'
+        ? `<button class="planned" data-act="openEvent" data-id="${esc(w.eventId)}">⭐ ${fmtDay(w.planDate)}${w.planTime?', '+fmtTime(w.planTime):''}</button>`
+        : `<div class="wacts"><button class="mini plan" data-act="planWish" data-id="${w.id}">📅 Plan it</button>${mine?`<button class="mini" data-act="delWish" data-id="${w.id}">Remove</button>`:''}</div>`}
+    </div>`).join('')
+    : `<p class="empty">${mine?'What do you want to do this week? Add your first wish above.':`${M(S.who).name} hasn’t made a wish this week.`}</p>`;
+}
+
 function drawPlans(){
-  const wk = ymd(S.week);
-  const planned = S.wishes.filter(w => w.week===wk && w.status==='planned' && w.planDate)
-    .sort((a,b) => (a.planDate+(a.planTime||'')).localeCompare(b.planDate+(b.planTime||'')));
-  if(!planned.length){
-    $('#plans').innerHTML = `<div class="empty">No plans yet. Open Weekly Wishes and tap “Plan it” on a wish.<br><br><button class="btn" data-tab="wishes">Go to Weekly Wishes</button></div>`;
-    return;
-  }
-  let html = '', last = '';
-  planned.forEach(w => {
-    if(w.planDate!==last){ html += `<h3 class="dayh">${fmtDay(w.planDate)}</h3>`; last = w.planDate; }
-    const e = S.events.find(x => x.id===w.eventId);
-    html += e ? `<div class="evlist" style="margin-bottom:8px">${evRow(e, 'Wished by ' + M(w.member).name)}</div>` : '';
+  let html = '';
+  weekDays().forEach(ds => {
+    const ev = S.wishes.filter(w => w.status==='planned' && w.planDate===ds && w.week===ymd(S.week))
+      .sort((a,b) => (a.planTime||'').localeCompare(b.planTime||''))
+      .map(w => { const e = S.events.find(x => x.id===w.eventId); return e ? evRow(e, 'Wished by ' + M(w.member).name) : ''; }).join('');
+    const ml = chosenMeals(ds);
+    if(ev || ml) html += `<h3 class="dayh">${fmtDay(ds)}</h3>${ml}${ev?`<div class="evlist" style="margin-bottom:8px">${ev}</div>`:''}`;
   });
-  $('#plans').innerHTML = html;
+  $('#plans').innerHTML = html || `<div class="empty">No plans yet. Open Weekly Wishes, tap "Plan it" on a wish, or pick a breakfast or dinner.<br><br><a class="btn" href="#/wishes">Go to Weekly Wishes</a></div>`;
+}
+
+/* ---------- meals ---------- */
+const weekDays = () => [0,1,2,3,4,5,6].map(i => ymd(addDays(S.week,i)));
+const mealsFor = (ds, meal) => S.meals.filter(x => x.date===ds && x.meal===meal).sort((a,b) => a.createdAt-b.createdAt);
+function mealDots(ds){
+  const ch = Object.keys(MEALS).filter(k => mealsFor(ds,k).some(x => x.status==='chosen'));
+  return ch.length ? `<span class="mdots" aria-hidden="true">${ch.map(k=>MEALS[k].icon).join('')}</span>` : '';
+}
+function chosenMeals(ds){
+  return Object.keys(MEALS).map(k => {
+    const c = mealsFor(ds,k).find(x => x.status==='chosen'); if(!c) return '';
+    return `<div class="mealplan">${MEALS[k].icon}<div><b>${MEALS[k].name}: ${esc(c.text)}</b><small>Requested by ${M(c.by).name}</small></div></div>`;
+  }).join('');
+}
+function mealBoard(days){
+  return days.map(ds => `<div class="mealday"><h3>${days.length>1 ? fmtDay(ds) : (ds===today?'Today':fmtDay(ds))}</h3>${
+    Object.keys(MEALS).map(k => `<div class="mealrow"><span class="mlabel">${MEALS[k].icon}${MEALS[k].name}</span><div class="mlist">${
+      mealsFor(ds,k).map(x => { const m = M(x.by), on = x.status==='chosen';
+        return `<span class="req ${on?'chosen':''}" style="${mv(m)}">${av(m,'sm')}<span>${esc(x.text)}</span>
+          <button class="pick" data-act="pickMeal" data-id="${x.id}">${on?'Picked ✓':'Pick'}</button>${x.by===S.me?`<button class="x" data-act="delMeal" data-id="${x.id}" aria-label="Remove request">✕</button>`:''}</span>`; }).join('')
+    }<button class="addmeal" data-act="newMeal" data-date="${ds}" data-meal="${k}">+ Request</button></div></div>`).join('')
+  }</div>`).join('');
+}
+function mealForm(ds, meal){
+  if(!S.me){ showWho(); return; }
+  const wk = weekStart(parse(ds)), days = [0,1,2,3,4,5,6].map(i => ymd(addDays(wk,i)));
+  sheet(`<div class="sheethead">${av(M(S.me),'mid')}<div><h2>Meal request</h2><p class="sub">What do you want to eat?</p></div><button class="icon" data-act="close" aria-label="Close">✕</button></div>
+    <form id="mealForm" class="form">
+      <label>Food<input name="text" required maxlength="60" placeholder="Pancakes, kimchi fried rice, tacos…"></label>
+      <fieldset><legend>Which meal</legend><div class="seg">${Object.keys(MEALS).map(k=>`<label><input type="radio" name="meal" value="${k}" ${k===meal?'checked':''}>${MEALS[k].icon}${MEALS[k].name}</label>`).join('')}</div></fieldset>
+      <label>Day<select name="date">${days.map(d=>`<option value="${d}" ${d===ds?'selected':''}>${fmtDay(d)}</option>`).join('')}</select></label>
+      <div class="actions"><button type="button" class="btn ghost" data-act="close">Cancel</button><button class="btn">Add request</button></div>
+    </form>`);
+}
+async function pickMeal(id){
+  const r = S.meals.find(x => x.id===id); if(!r) return;
+  if(r.status==='chosen'){ await store.update(C.meals, id, {status:'request'}); toast('Unpicked'); return; }
+  for(const x of mealsFor(r.date, r.meal)) if(x.id!==id && x.status==='chosen') await store.update(C.meals, x.id, {status:'request'});
+  await store.update(C.meals, id, {status:'chosen'});
+  toast(`${MEALS[r.meal].name} picked. It's in Final Plans`);
+}
+
+function msgBody(c, m){
+  if(okImg(c.img)) return `<button class="photo" data-act="viewImg" data-id="${c.id}" aria-label="Open photo from ${m.name}"><img src="${esc(c.img)}" alt="Photo from ${m.name}" loading="lazy"></button>`;
+  if(okGif(c.gif)) return `<img class="sticker" src="${esc(c.gif)}" alt="Sticker from ${m.name}" loading="lazy">`;
+  return `<p>${esc(c.text)}</p>`;
 }
 
 function drawChat(scroll){
   const el = $('#chat'); if(!el) return;
+  const last = S.chat[S.chat.length-1];
+  const sig = S.chat.length + ':' + (last ? last.id : '') + ':' + S.me;
+  if(!scroll && sig===S.chatSig) return;
+  S.chatSig = sig;
   const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
   el.innerHTML = S.chat.length ? S.chat.map(c => {
-    const m = M(c.by);
+    const m = M(c.by), bare = !okImg(c.img) && okGif(c.gif);
     return `<div class="msg ${c.by===S.me?'mine':''}" style="${mv(m)}">${av(m,'sm')}
-      <div class="bubble"><small>${m.name}, ${when(c.createdAt)}</small><p>${esc(c.text)}</p></div></div>`;
+      <div class="bubble ${bare?'bare':''}"><small>${m.name}, ${when(c.createdAt)}</small>${msgBody(c,m)}</div></div>`;
   }).join('') : `<p class="empty">Say hi to the family 👋</p>`;
-  if(scroll || atBottom) el.scrollTop = el.scrollHeight;
+  S.stick = scroll || atBottom;
+  if(S.stick) el.scrollTop = el.scrollHeight;
+}
+
+function setTray(t){
+  S.tray = S.tray===t ? '' : t;
+  $('#emojiTray').hidden = S.tray!=='emoji';
+  $('#gifTray').hidden = S.tray!=='gif';
+  document.querySelectorAll('[data-act=tray]').forEach(b => { const on = b.dataset.t===S.tray; b.classList.toggle('on', on); b.setAttribute('aria-expanded', on); });
 }
 
 function drawMe(){
-  const b = $('#meBtn');
-  if(!S.me){ b.innerHTML = `<span>Who are you?</span>`; showWho(); return; }
+  const b = $('#meBtn'); if(!b) return;
+  if(!S.me){ b.innerHTML = `<span style="padding:6px 4px 6px 10px">Who are you?</span>`; showWho(); return; }
   const m = M(S.me);
   b.innerHTML = `${av(m)}<span>${m.name}<small>Switch</small></span>`;
 }
@@ -478,11 +735,46 @@ function drawMe(){
 function showWho(){
   const w = $('#who');
   if(!w.hidden) return;
-  w.innerHTML = `<div class="panel whopanel" role="dialog" aria-modal="true" aria-labelledby="whoT">
-    <h2 id="whoT">Who's using this?</h2><p class="hint" style="margin:0 auto">Tap your icon.</p>
+  w.innerHTML = `<div class="card whopanel" role="dialog" aria-modal="true" aria-labelledby="whoT">
+    <h2 id="whoT">Who's using this?</h2><p class="hint" style="margin:0 auto">Tap your face.</p>
     <div class="whogrid">${PEOPLE.map(k=>`<button data-act="setMe" data-m="${k}">${av(MEMBERS[k],'big')}${MEMBERS[k].name}</button>`).join('')}</div></div>`;
   w.hidden = false;
   w.querySelector('button').focus();
+}
+
+/* ---------- photos ---------- */
+const readURL = file => new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(new Error('Could not read that file')); r.readAsDataURL(file); });
+async function shrink(file){
+  if(file.type==='image/gif'){
+    if(file.size > 700*1024) throw new Error('That GIF is too big. Pick one under 700 KB.');
+    return readURL(file);
+  }
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res,rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("That photo can't be opened here. Try a different one.")); i.src = url; });
+    let max = 1280;
+    for(let tries=0; tries<6; tries++){
+      const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement('canvas');
+      cv.width = Math.max(1, Math.round(img.naturalWidth*s)); cv.height = Math.max(1, Math.round(img.naturalHeight*s));
+      const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0,0,cv.width,cv.height); cx.drawImage(img,0,0,cv.width,cv.height);
+      const out = cv.toDataURL('image/jpeg', .72);
+      if(out.length < 700000) return out;
+      max = Math.round(max*.75);
+    }
+    throw new Error('That photo is too big to send');
+  } finally { URL.revokeObjectURL(url); }
+}
+async function sendPhoto(ev){
+  const file = ev.target.files && ev.target.files[0]; ev.target.value = '';
+  if(!file || !S.me) return;
+  if(!file.type.startsWith('image/')){ toast('Pick a photo or GIF'); return; }
+  toast('Sending photo…');
+  try {
+    const img = await shrink(file);
+    await store.add(C.chat, {by:S.me, text:'', img, createdAt:Date.now()});
+    toast('Photo sent');
+  } catch(err){ toast(err.message); }
 }
 
 /* ---------- sheets ---------- */
@@ -504,7 +796,7 @@ function openEvent(id){
   const whenTxt = e.repeat && e.repeat!=='none'
     ? `${REPEAT[e.repeat]} from ${fmtDay(e.date)}${e.until?' until '+fmtDay(e.until):''}`
     : fmtDay(e.date);
-  sheet(`<div class="sheethead">${av(m)}<div><h2>${esc(e.title)}</h2><p class="sub">${m.name}</p></div>
+  sheet(`<div class="sheethead">${av(m,'mid')}<div><h2>${esc(e.title)}</h2><p class="sub">${m.name}</p></div>
       <button class="icon" data-act="close" aria-label="Close">✕</button></div>
     <div class="tags"><span class="tag">📅 ${esc(whenTxt)}</span><span class="tag">🕒 ${fmtTime(e.time)}</span>${e.wishId?'<span class="tag">⭐ From a wish</span>':''}</div>
     ${e.note?`<div class="note">${esc(e.note)}</div>`:''}
@@ -531,7 +823,7 @@ function eventForm(e, preset={}){
     <form id="evForm" class="form" data-id="${e?e.id:''}" data-wish="${esc(preset.wishId||'')}">
       <label>What<input name="title" required maxlength="80" value="${esc(d.title)}" placeholder="Piano lesson, beach day, birthday…"></label>
       <fieldset><legend>Who</legend><div class="who">${Object.keys(MEMBERS).map(k=>
-        `<label class="whochip" style="${mv(MEMBERS[k])}"><input type="radio" name="member" value="${k}" ${d.member===k?'checked':''}>${MEMBERS[k].emoji} ${MEMBERS[k].name}</label>`).join('')}</div></fieldset>
+        `<label class="whochip" style="${mv(MEMBERS[k])}"><input type="radio" name="member" value="${k}" ${d.member===k?'checked':''}>${av(MEMBERS[k],'sm')}${MEMBERS[k].name}</label>`).join('')}</div></fieldset>
       <div class="row2">
         <label>Date<input type="date" name="date" required value="${esc(d.date)}"></label>
         <label>Time <small>(blank = all day)</small><input type="time" name="time" value="${esc(d.time||'')}"></label>
@@ -552,8 +844,7 @@ function eventForm(e, preset={}){
 /* ---------- actions ---------- */
 document.addEventListener('click', async ev => {
   if(ev.target.id==='scrim'){ closeSheet(); return; }
-  const t = ev.target.closest('[data-act],[data-tab]'); if(!t) return;
-  if(t.dataset.tab){ show(t.dataset.tab); return; }
+  const t = ev.target.closest('[data-act]'); if(!t) return;
   const a = t.dataset.act, id = t.dataset.id;
   try {
     switch(a){
@@ -587,7 +878,29 @@ document.addEventListener('click', async ev => {
       }
       case 'delWish': if(confirm('Remove this wish?')) await store.remove(C.wishes, id); break;
       case 'switchMe': showWho(); break;
-      case 'setMe': S.me = t.dataset.m; lsSet('famcal:me', S.me); $('#who').hidden = true; refresh(); break;
+      case 'setMe': S.me = t.dataset.m; lsSet('famcal:me', S.me); $('#who').hidden = true; S.chatSig = ''; show(); break;
+      case 'tray': setTray(t.dataset.t); break;
+      case 'newMeal': mealForm(t.dataset.date, t.dataset.meal); break;
+      case 'pickMeal': await pickMeal(id); break;
+      case 'delMeal': if(confirm('Remove this request?')) await store.remove(C.meals, id); break;
+      case 'emoji': {
+        const inp = $('#chatIn'), e = t.dataset.e, s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s;
+        inp.value = (inp.value.slice(0,s) + e + inp.value.slice(en)).slice(0,500);
+        inp.setSelectionRange(s+e.length, s+e.length);
+        break;
+      }
+      case 'sticker': {
+        if(!S.me) return;
+        setTray('gif');
+        await store.add(C.chat, {by:S.me, text:'', gif:stickerUrl(t.dataset.c), createdAt:Date.now()});
+        drawChat(true); break;
+      }
+      case 'viewImg': {
+        const c = S.chat.find(x => x.id===id); if(!c || !okImg(c.img)) return;
+        sheet(`<div class="sheethead"><div><h2>${M(c.by).name}’s photo</h2><p class="sub">${when(c.createdAt)}</p></div><button class="icon" data-act="close" aria-label="Close">✕</button></div>
+          <img class="bigimg" src="${esc(c.img)}" alt="Photo from ${M(c.by).name}">`);
+        break;
+      }
     }
   } catch(err){ toast('Something went wrong: ' + err.message); }
 });
@@ -618,6 +931,13 @@ document.addEventListener('submit', async ev => {
       }
       if(S.view==='cal'){ S.sel = data.date; const p = parse(data.date); S.month = new Date(p.getFullYear(), p.getMonth(), 1); refresh(); }
     }
+    else if(f.id==='mealForm'){
+      const fd = Object.fromEntries(new FormData(f)), text = (fd.text||'').trim();
+      if(!text || !S.me || !fd.meal || !fd.date) return;
+      closeSheet();
+      await store.add(C.meals, {date:fd.date, meal:fd.meal, by:S.me, text, status:'request', createdAt:Date.now()});
+      toast('Request added');
+    }
     else if(f.id==='wishForm'){
       const inp = $('#wishIn'), text = inp.value.trim(); if(!text || !S.me) return;
       inp.value = '';
@@ -626,6 +946,7 @@ document.addEventListener('submit', async ev => {
     else if(f.id==='chatForm'){
       const inp = $('#chatIn'), text = inp.value.trim(); if(!text || !S.me) return;
       inp.value = '';
+      if(S.tray==='emoji') setTray('emoji');
       await store.add(C.chat, {by:S.me, text, createdAt:Date.now()});
       drawChat(true);
     }
@@ -638,12 +959,14 @@ document.addEventListener('submit', async ev => {
 });
 
 document.addEventListener('keydown', e => { if(e.key==='Escape' && !$('#scrim').hidden) closeSheet(); });
+addEventListener('hashchange', show);
 
 /* ---------- start ---------- */
-show('cal');
+show();
 store.listen(C.events,   a => { S.events = a; refresh(); });
 store.listen(C.comments, a => { S.comments = a; refresh(); });
 store.listen(C.wishes,   a => { S.wishes = a; refresh(); });
+store.listen(C.meals,    a => { S.meals = a; refresh(); });
 store.listen(C.chat,     a => { S.chat = a.sort((x,y) => x.createdAt-y.createdAt); refresh(); }, {latest:300});
 </script>
 </body>
